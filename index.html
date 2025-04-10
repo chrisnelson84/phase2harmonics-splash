@@ -9,76 +9,102 @@
       margin: 0;
       overflow: hidden;
       background-color: black;
+      font-family: monospace;
     }
 
     #dash {
       position: absolute;
       width: 100px;
       height: auto;
-      transition: transform 0.1s linear;
+      z-index: 1000;
+      transition: transform 0.2s linear;
+      filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8))
+              drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
       pointer-events: none;
-      filter: drop-shadow(0 0 20px #00f0ff);
+    }
+
+    #trail {
+      position: absolute;
+      width: 80px;
+      height: auto;
+      opacity: 0.4;
+      filter: blur(6px) saturate(2);
+      pointer-events: none;
     }
 
     #magic {
-      position: fixed;
-      bottom: 80px;
+      position: absolute;
+      bottom: 50px;
       left: 50%;
       transform: translateX(-50%);
-      width: 150px;
-      height: auto;
-      pointer-events: none;
+      width: 200px;
+      z-index: 999;
     }
 
-    #dns-button {
-      position: fixed;
-      bottom: 30px;
+    #dns {
+      position: absolute;
+      bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      font-family: monospace;
-      font-size: 0.9rem;
-      background: none;
       color: cyan;
-      border: none;
+      font-size: 14px;
+      text-decoration: none;
+      z-index: 999;
+    }
+
+    #dns:hover {
       text-decoration: underline;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <img id="dash" src="dash.png" alt="Dash" />
-  <img id="magic" src="magic.png" alt="Magic Loading" />
-  <button id="dns-button" onclick="location.href='https://phase2harmonics.com/dashboard'">
-    Access Resonance Panel
-  </button>
+  <img src="dash.png" id="dash" alt="Dash" />
+  <img src="magic.png" id="magic" alt="Magic Loading" />
+  <a href="#" id="dns">Access Resonance Panel</a>
 
   <script>
-    const dash = document.getElementById("dash");
-    let x = Math.random() * window.innerWidth;
-    let y = Math.random() * window.innerHeight;
+    const dash = document.getElementById('dash');
+    let posX = Math.random() * (window.innerWidth - 100);
+    let posY = Math.random() * (window.innerHeight - 100);
     let angle = Math.random() * 360;
-    const speed = 2;
+    let speed = 2.4;
+    let velX = Math.cos(angle) * speed;
+    let velY = Math.sin(angle) * speed;
 
-    function update() {
-      const radians = (angle * Math.PI) / 180;
-      x += Math.cos(radians) * speed;
-      y += Math.sin(radians) * speed;
+    function updatePosition() {
+      posX += velX;
+      posY += velY;
 
-      if (x <= 0 || x + dash.offsetWidth >= window.innerWidth) {
-        angle = 180 - angle + (Math.random() * 40 - 20);
+      // Bounce and update angle
+      if (posX <= 0 || posX + dash.width >= window.innerWidth) {
+        velX = -velX;
+        angle = Math.atan2(velY, velX);
       }
-      if (y <= 0 || y + dash.offsetHeight >= window.innerHeight) {
-        angle = -angle + (Math.random() * 40 - 20);
+
+      if (posY <= 0 || posY + dash.height >= window.innerHeight) {
+        velY = -velY;
+        angle = Math.atan2(velY, velX);
       }
 
-      dash.style.left = `${x}px`;
-      dash.style.top = `${y}px`;
-      dash.style.transform = `rotate(${angle}deg)`;
+      // Move Dash
+      dash.style.left = posX + 'px';
+      dash.style.top = posY + 'px';
+      dash.style.transform = `rotate(${angle}rad)`;
 
-      requestAnimationFrame(update);
+      // Trail
+      const trail = document.createElement('img');
+      trail.src = "dash.png";
+      trail.id = "trail";
+      trail.style.left = posX + 'px';
+      trail.style.top = posY + 'px';
+      trail.style.transform = `rotate(${angle}rad)`;
+      document.body.appendChild(trail);
+      setTimeout(() => {
+        trail.remove();
+      }, 500);
     }
 
-    update();
+    setInterval(updatePosition, 20);
   </script>
 </body>
 </html>
