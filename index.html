@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Phase2Harmonics</title>
   <style>
     html, body {
@@ -49,42 +49,11 @@
   </style>
 </head>
 <body>
-  <img src="dash.png" id="dash" alt="Dash the Turtle"/>
-  <img src="magic.png" id="magic" alt="Magic Loading..."/>
+  <img src="dash.png" id="dash" alt="Dash the Turtle">
+  <img src="magic.png" id="magic" alt="Magic Loading...">
   <a id="dns-btn" href="/vault">Access Resonance Panel</a>
 
   <script>
     const dash = document.getElementById("dash");
 
-    let posX = 100, posY = 100;
-    let dx = 1.2, dy = 1.2;
-
-    function startDashAnimation() {
-      const animate = () => {
-        const maxX = window.innerWidth - dash.clientWidth;
-        const maxY = window.innerHeight - dash.clientHeight;
-
-        posX += dx;
-        posY += dy;
-
-        if (posX <= 0 || posX >= maxX) dx *= -1;
-        if (posY <= 0 || posY >= maxY) dy *= -1;
-
-        dash.style.left = posX + 'px';
-        dash.style.top = posY + 'px';
-
-        requestAnimationFrame(animate);
-      };
-
-      animate();
-    }
-
-    // Wait until Dash has a size
-    if (dash.complete) {
-      startDashAnimation();
-    } else {
-      dash.onload = startDashAnimation;
-    }
-  </script>
-</body>
-</html>
+    let posX = 100, posY =
