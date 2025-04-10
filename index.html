@@ -6,75 +6,38 @@
   <title>Phase2Harmonics</title>
   <style>
     body {
-      margin: 0;
-      background-color: #282c34;
-      overflow: hidden;
       font-family: Arial, sans-serif;
+      background-color: #1e1f26;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
-      position: relative;
+      align-items: center;
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      text-align: center;
-      color: white;
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
     }
 
-    #dash {
-      position: absolute;
-      width: 80px;
-      height: 80px;
-      background-image: url('assets/dash.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      filter: hue-rotate(0deg);
+    p {
+      font-size: 1.2rem;
+      font-style: italic;
+      opacity: 0.8;
+      margin-bottom: 3rem;
     }
 
-    #loading-img {
-      position: absolute;
-      bottom: 20px;
-      width: 300px;
-    }
-  </style>
-</head>
-<body>
-  <div id="dash"></div>
-  <h1>Welcome to Phase2Harmonics</h1>
-  <img id="loading-img" src="assets/magic.png" alt="Magic Loading">
-
-  <script>
-    const dash = document.getElementById('dash');
-    let dx = 2;
-    let dy = 2;
-    let x = 100;
-    let y = 100;
-    let hue = 0;
-
-    function animate() {
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
-
-      x += dx;
-      y += dy;
-
-      if (x + 80 >= screenWidth || x <= 0) dx *= -1;
-      if (y + 80 >= screenHeight || y <= 0) dy *= -1;
-
-      dash.style.left = x + 'px';
-      dash.style.top = y + 'px';
-
-      hue = (hue + 1) % 360;
-      dash.style.filter = `hue-rotate(${hue}deg)`;
-
-      requestAnimationFrame(animate);
+    .dash-container {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      animation: bounce 4s infinite, colorShift 8s infinite linear;
     }
 
-    animate();
-  </script>
-</body>
-</html>
+    @keyframes bounce {
+      0%, 100% { transform: translate(0, 0); }
+      25
