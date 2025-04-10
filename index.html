@@ -40,4 +40,31 @@
 
     @keyframes bounce {
       0%, 100% { transform: translate(0, 0); }
-      25
+      25% { transform: translate(300px, 0); }
+      50% { transform: translate(300px, 200px); }
+      75% { transform: translate(0, 200px); }
+    }
+
+    @keyframes colorShift {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    .magic-loading {
+      margin-top: 2rem;
+      max-width: 200px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Phase2Harmonics</h1>
+  <p><em>We're weaving the threads of memory and creation.</em></p>
+
+  <div class="dash-container">
+    <img src="dash.png" alt="Dash the turtle" width="100" height="100" />
+  </div>
+
+  <img class="magic-loading" src="magic.png" alt="Magic Loading" />
+</body>
+</html>
