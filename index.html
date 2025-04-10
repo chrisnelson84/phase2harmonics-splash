@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Phase2Harmonics</title>
   <style>
@@ -115,6 +115,18 @@
       setTimeout(() => ripple.remove(), 1000);
     }
 
+    function rotatePoint(cx, cy, x, y, angle) {
+      const radians = angle * Math.PI / 180;
+      const cos = Math.cos(radians);
+      const sin = Math.sin(radians);
+      const dx = x - cx;
+      const dy = y - cy;
+      return {
+        x: cx + dx * cos - dy * sin,
+        y: cy + dx * sin + dy * cos
+      };
+    }
+
     function moveDash() {
       const dashW = dash.offsetWidth;
       const dashH = dash.offsetHeight;
@@ -145,13 +157,17 @@
       dash.style.top = `${y}px`;
       dash.style.transform = `rotate(${currentAngle}deg)`;
 
-      // Hardcoded exact center of Dash's shell tip (assumed for tail position)
-      const tailOffsetX = 180; // half of dash width
-      const tailOffsetY = 290; // slightly above bottom of image
+      // Calculate rotated tail point
+      const centerX = x + dashW / 2;
+      const centerY = y + dashH / 2;
+      const tailX = x + 180;
+      const tailY = y + 290;
+      const rotatedTail = rotatePoint(centerX, centerY, tailX, tailY, currentAngle);
+
       const trail = document.createElement('div');
       trail.className = 'trail-dot';
-      trail.style.left = `${x + tailOffsetX}px`;
-      trail.style.top = `${y + tailOffsetY}px`;
+      trail.style.left = `${rotatedTail.x}px`;
+      trail.style.top = `${rotatedTail.y}px`;
       trail.style.background = `hsl(${hue}, 100%, 70%)`;
       document.body.appendChild(trail);
       setTimeout(() => trail.remove(), 800);
