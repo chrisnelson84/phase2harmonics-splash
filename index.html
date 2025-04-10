@@ -3,84 +3,103 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Phase2Harmonics</title>
+  <title>Phase2Harmonics Splash</title>
   <style>
-    html, body {
+    * {
       margin: 0;
       padding: 0;
-      background: black;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: black;
       overflow: hidden;
       height: 100vh;
       width: 100vw;
+      position: relative;
+      font-family: monospace;
+      color: cyan;
     }
-
     #dash {
       position: absolute;
-      width: 150px; /* 3x size */
-      filter: drop-shadow(0 0 25px cyan);
-      transition: transform 0.2s linear;
+      width: 180px;
+      transition: transform 0.2s ease-in-out;
       z-index: 10;
+      filter: drop-shadow(0 0 15px cyan);
     }
-
+    #trail {
+      position: absolute;
+      width: 120px;
+      opacity: 0.8;
+      z-index: 1;
+      transform: rotate(180deg);
+    }
+    footer {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+      text-align: center;
+      z-index: 20;
+    }
     #magic {
-      position: absolute;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%);
       width: 150px;
+      display: block;
+      margin: 0 auto 10px auto;
     }
-
-    #dnsButton {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+    a {
       color: cyan;
-      font-family: monospace;
-      font-size: 0.9rem;
       text-decoration: none;
-      z-index: 5;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <img id="dash" src="dash.png" alt="Dash" />
-  <img id="magic" src="magic.png" alt="Magic Loading" />
-  <a id="dnsButton" href="#">Access Resonance Panel</a>
+  <img src="dash.png" id="dash" alt="Dash the turtle" />
+  <img src="trail.png" id="trail" alt="Dash trail" />
+
+  <footer>
+    <img src="magic.png" id="magic" alt="Magic Loading" />
+    <a href="#">Access Resonance Panel</a>
+  </footer>
 
   <script>
-    const dash = document.getElementById('dash');
-    let x = 100, y = 100;
-    let angle = Math.random() * 2 * Math.PI;
-    let speed = 1.5;
-    let dx = Math.cos(angle) * speed;
-    let dy = Math.sin(angle) * speed;
+    const dash = document.getElementById("dash");
+    const trail = document.getElementById("trail");
+    let dx = 2;
+    let dy = 2;
+    let x = 100;
+    let y = 100;
+    let angle = 45;
 
-    function moveDash() {
-      const dashWidth = dash.offsetWidth;
-      const dashHeight = dash.offsetHeight;
-      const bounds = {
-        width: window.innerWidth,
-        height: window.innerHeight
-      };
+    function move() {
+      const dashW = dash.offsetWidth;
+      const dashH = dash.offsetHeight;
+      const winW = window.innerWidth;
+      const winH = window.innerHeight;
 
       x += dx;
       y += dy;
 
-      if (x <= 0 || x + dashWidth >= bounds.width) {
-        dx *= -1;
+      if (x + dashW >= winW || x <= 0) {
+        dx = -dx;
+        angle = 180 - angle + Math.random() * 60 - 30;
+        trail.style.animation = 'pulse 1s ease';
       }
-      if (y <= 0 || y + dashHeight >= bounds.height) {
-        dy *= -1;
+      if (y + dashH >= winH || y <= 0) {
+        dy = -dy;
+        angle = 360 - angle + Math.random() * 60 - 30;
+        trail.style.animation = 'pulse 1s ease';
       }
 
-      const angleDeg = Math.atan2(dy, dx) * (180 / Math.PI) + 45; // correcting +45 deg
-      dash.style.transform = `translate(${x}px, ${y}px) rotate(${angleDeg}deg)`;
+      dash.style.left = x + "px";
+      dash.style.top = y + "px";
+      dash.style.transform = `rotate(${angle}deg)`;
 
-      requestAnimationFrame(moveDash);
+      // Set trail behind Dash
+      trail.style.left = x + 60 + "px";
+      trail.style.top = y + 90 + "px";
     }
 
-    moveDash();
+    setInterval(move, 16); // Roughly 60fps
   </script>
 </body>
 </html>
