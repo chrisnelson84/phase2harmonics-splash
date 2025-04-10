@@ -1,70 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Phase2Harmonics</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #1e1f26;
-      color: white;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
+      background-color: #2c2c34;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: white;
     }
-
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      font-size: 1.2rem;
-      font-style: italic;
-      opacity: 0.8;
-      margin-bottom: 3rem;
-    }
-
-    .dash-container {
+    #dash {
+      position: absolute;
       width: 100px;
-      height: 100px;
-      position: relative;
-      animation: bounce 4s infinite, colorShift 8s infinite linear;
+      animation: bounce 5s infinite alternate ease-in-out;
     }
-
     @keyframes bounce {
-      0%, 100% { transform: translate(0, 0); }
-      25% { transform: translate(300px, 0); }
-      50% { transform: translate(300px, 200px); }
-      75% { transform: translate(0, 200px); }
+      0% { top: 0; left: 0; filter: hue-rotate(0deg); }
+      25% { top: 0; left: calc(100% - 100px); filter: hue-rotate(90deg); }
+      50% { top: calc(100% - 100px); left: calc(100% - 100px); filter: hue-rotate(180deg); }
+      75% { top: calc(100% - 100px); left: 0; filter: hue-rotate(270deg); }
+      100% { top: 0; left: 0; filter: hue-rotate(360deg); }
     }
-
-    @keyframes colorShift {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
-
-    .magic-loading {
-      margin-top: 2rem;
-      max-width: 200px;
-      opacity: 0.9;
+    #magic {
+      position: absolute;
+      bottom: 40px;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome to Phase2Harmonics</h1>
-  <p><em>We're weaving the threads of memory and creation.</em></p>
-
-  <div class="dash-container">
-    <img src="dash.png" alt="Dash the turtle" width="100" height="100" />
-  </div>
-
-  <img class="magic-loading" src="magic.png" alt="Magic Loading" />
+  <img id="dash" src="dash.png" alt="Bouncing Dash">
+  <img id="magic" src="magic.png" alt="Magic Loading">
 </body>
 </html>
