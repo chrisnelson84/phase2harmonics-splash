@@ -1,34 +1,45 @@
-<script>
-  const dash = document.getElementById("dash");
-  let posX = 50, posY = 50;
-  let dx = 1.6, dy = 1.6; // Slowed down from 2 to ~1.6
-
-  function animate() {
-    const maxX = window.innerWidth - dash.clientWidth;
-    const maxY = window.innerHeight - dash.clientHeight;
-
-    posX += dx;
-    posY += dy;
-
-    if (posX <= 0 || posX >= maxX) {
-      dx *= -1;
-      dx += (Math.random() - 0.5) * 0.6; // Add slight randomization
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Phase2Harmonics Splash</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
     }
 
-    if (posY <= 0 || posY >= maxY) {
-      dy *= -1;
-      dy += (Math.random() - 0.5) * 0.6;
+    #dash {
+      position: absolute;
+      width: 100px;
+      height: 100px;
     }
 
-    // Clamp speed so Dash doesn’t go full Tokyo Drift
-    dx = Math.max(Math.min(dx, 3), -3);
-    dy = Math.max(Math.min(dy, 3), -3);
+    #magic {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 180px;
+      height: auto;
+      opacity: 0.95;
+    }
 
-    dash.style.left = `${posX}px`;
-    dash.style.top = `${posY}px`;
+    a#dns-btn {
+      position: fixed;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #0ff;
+      font-size: 0.9rem;
+      font-family: monospace;
+      text-decoration: none;
+      opacity: 0.8;
+    }
 
-    requestAnimationFrame(animate);
-  }
-
-  animate();
-</script>
+    a#dns-btn:hover {
