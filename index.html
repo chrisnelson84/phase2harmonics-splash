@@ -24,25 +24,6 @@
       transform-origin: center center;
     }
 
-    .trail-dot {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      opacity: 0.6;
-      filter: blur(6px);
-      pointer-events: none;
-      z-index: 199;
-      animation: fadeOut 0.8s forwards;
-    }
-
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        transform: scale(1.6);
-      }
-    }
-
     #magic {
       position: absolute;
       bottom: 70px;
@@ -75,7 +56,6 @@
     let y = 100;
     let dx = 2.4 * (Math.random() > 0.5 ? 1 : -1);
     let dy = 2.4 * (Math.random() > 0.5 ? 1 : -1);
-    let hue = 0;
     let currentAngle = 0;
 
     function getAngle(dx, dy) {
@@ -87,18 +67,6 @@
       while (difference < -180) difference += 360;
       while (difference > 180) difference -= 360;
       return from + difference;
-    }
-
-    function rotatePoint(cx, cy, x, y, angle) {
-      const radians = angle * Math.PI / 180;
-      const cos = Math.cos(radians);
-      const sin = Math.sin(radians);
-      const dx = x - cx;
-      const dy = y - cy;
-      return {
-        x: cx + dx * cos - dy * sin,
-        y: cy + dx * sin + dy * cos
-      };
     }
 
     function moveDash() {
@@ -118,22 +86,6 @@
       dash.style.left = `${x}px`;
       dash.style.top = `${y}px`;
       dash.style.transform = `rotate(${currentAngle}deg)`;
-
-      // Tail point relative to image center, rotated with Dash
-      const centerX = x + dashW / 2;
-      const centerY = y + dashH / 2;
-      const tailX = x + 180;
-      const tailY = y + 300;
-      const rotatedTail = rotatePoint(centerX, centerY, tailX, tailY, currentAngle);
-
-      const trail = document.createElement('div');
-      trail.className = 'trail-dot';
-      trail.style.left = `${rotatedTail.x}px`;
-      trail.style.top = `${rotatedTail.y}px`;
-      trail.style.background = `hsl(${hue}, 100%, 70%)`;
-      document.body.appendChild(trail);
-      setTimeout(() => trail.remove(), 800);
-      hue = (hue + 12) % 360;
 
       requestAnimationFrame(moveDash);
     }
