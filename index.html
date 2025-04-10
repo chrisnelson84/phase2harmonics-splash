@@ -21,6 +21,7 @@
       height: auto;
       z-index: 100;
       pointer-events: none;
+      transform-origin: center center;
     }
 
     .trail-dot {
@@ -91,10 +92,17 @@
     let dx = 2.4 * (Math.random() > 0.5 ? 1 : -1);
     let dy = 2.4 * (Math.random() > 0.5 ? 1 : -1);
     let hue = 0;
-    let lastAngle = 0;
+    let currentAngle = 0;
 
     function getAngle(dx, dy) {
       return Math.atan2(dy, dx) * 180 / Math.PI + 45;
+    }
+
+    function shortestAngle(from, to) {
+      let difference = to - from;
+      while (difference < -180) difference += 360;
+      while (difference > 180) difference -= 360;
+      return from + difference;
     }
 
     function spawnRipple(x, y) {
@@ -130,19 +138,16 @@
         spawnRipple(x + dashW / 2 - 180, y + dashH / 2 - 180);
       }
 
-      const angle = getAngle(dx, dy);
-      if (angle !== lastAngle) {
-        dash.style.transform = `rotate(${angle}deg)`;
-        lastAngle = angle;
-      }
-
+      const desiredAngle = getAngle(dx, dy);
+      currentAngle = shortestAngle(currentAngle, desiredAngle);
       dash.style.left = `${x}px`;
       dash.style.top = `${y}px`;
+      dash.style.transform = `rotate(${currentAngle}deg)`;
 
+      const offsetX = 0.44;
+      const offsetY = 0.76;
       const trail = document.createElement('div');
       trail.className = 'trail-dot';
-      const offsetX = 0.44; // locked value for consistency
-      const offsetY = 0.76;
       trail.style.left = `${x + dashW * offsetX}px`;
       trail.style.top = `${y + dashH * offsetY}px`;
       trail.style.background = `hsl(${hue}, 100%, 70%)`;
@@ -156,4 +161,4 @@
     moveDash();
   </script>
 </body>
-</html>
+</html
