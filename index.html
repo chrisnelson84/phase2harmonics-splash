@@ -1,105 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Phase2Harmonics Splash</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      background-color: black;
-      overflow: hidden;
-      height: 100vh;
-      width: 100vw;
-      position: relative;
-      font-family: monospace;
-      color: cyan;
-    }
-    #dash {
-      position: absolute;
-      width: 180px;
-      transition: transform 0.2s ease-in-out;
-      z-index: 10;
-      filter: drop-shadow(0 0 15px cyan);
-    }
-    #trail {
-      position: absolute;
-      width: 120px;
-      opacity: 0.8;
-      z-index: 1;
-      transform: rotate(180deg);
-    }
-    footer {
-      position: absolute;
-      bottom: 30px;
-      width: 100%;
-      text-align: center;
-      z-index: 20;
-    }
-    #magic {
-      width: 150px;
-      display: block;
-      margin: 0 auto 10px auto;
-    }
-    a {
-      color: cyan;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phase2Harmonics</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+            height: 100%;
+            width: 100%;
+        }
+        #dash {
+            position: absolute;
+            width: 360px; /* doubled size */
+            height: auto;
+            z-index: 10;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+        }
+        #trail {
+            position: absolute;
+            width: 180px;
+            height: auto;
+            opacity: 0.6;
+            z-index: 5;
+            pointer-events: none;
+        }
+        #footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            z-index: 20;
+        }
+        #magic {
+            width: 160px;
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+        #dns-link {
+            color: aqua;
+            font-family: monospace;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        @keyframes ripple {
+            0% { box-shadow: 0 0 10px 2px rgba(0,255,255,0.2); }
+            50% { box-shadow: 0 0 25px 6px rgba(0,255,255,0.4); }
+            100% { box-shadow: 0 0 10px 2px rgba(0,255,255,0.2); }
+        }
+        .ripple-effect {
+            animation: ripple 0.6s ease-out;
+        }
+    </style>
 </head>
 <body>
-  <img src="dash.png" id="dash" alt="Dash the turtle" />
-  <img src="trail.png" id="trail" alt="Dash trail" />
+    <img src="dash.png" id="dash" />
+    <img src="trail.png" id="trail" />
+    <div id="footer">
+        <img src="magic.png" id="magic" />
+        <a href="#" id="dns-link">Access Resonance Panel</a>
+    </div>
 
-  <footer>
-    <img src="magic.png" id="magic" alt="Magic Loading" />
-    <a href="#">Access Resonance Panel</a>
-  </footer>
+    <script>
+        const dash = document.getElementById('dash');
+        const trail = document.getElementById('trail');
+        let x = 200, y = 200;
+        let dx = 3 * (Math.random() > 0.5 ? 1 : -1);
+        let dy = 3 * (Math.random() > 0.5 ? 1 : -1);
+        const speed = 1.2;
 
-  <script>
-    const dash = document.getElementById("dash");
-    const trail = document.getElementById("trail");
-    let dx = 2;
-    let dy = 2;
-    let x = 100;
-    let y = 100;
-    let angle = 45;
+        function updateRotation(dx, dy) {
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            dash.style.transform = `rotate(${angle}deg)`;
+        }
 
-    function move() {
-      const dashW = dash.offsetWidth;
-      const dashH = dash.offsetHeight;
-      const winW = window.innerWidth;
-      const winH = window.innerHeight;
+        function moveDash() {
+            const dashRect = dash.getBoundingClientRect();
+            const trailOffsetX = dashRect.width * 0.25;
+            const trailOffsetY = dashRect.height * 0.6;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
 
-      x += dx;
-      y += dy;
+            x += dx * speed;
+            y += dy * speed;
 
-      if (x + dashW >= winW || x <= 0) {
-        dx = -dx;
-        angle = 180 - angle + Math.random() * 60 - 30;
-        trail.style.animation = 'pulse 1s ease';
-      }
-      if (y + dashH >= winH || y <= 0) {
-        dy = -dy;
-        angle = 360 - angle + Math.random() * 60 - 30;
-        trail.style.animation = 'pulse 1s ease';
-      }
+            // bounce with ripple
+            if (x <= 0 || x + dashRect.width >= windowWidth) {
+                dx *= -1;
+                document.body.classList.add('ripple-effect');
+            }
+            if (y <= 0 || y + dashRect.height >= windowHeight) {
+                dy *= -1;
+                document.body.classList.add('ripple-effect');
+            }
 
-      dash.style.left = x + "px";
-      dash.style.top = y + "px";
-      dash.style.transform = `rotate(${angle}deg)`;
+            updateRotation(dx, dy);
 
-      // Set trail behind Dash
-      trail.style.left = x + 60 + "px";
-      trail.style.top = y + 90 + "px";
-    }
+            dash.style.left = x + 'px';
+            dash.style.top = y + 'px';
+            trail.style.left = (x + trailOffsetX) + 'px';
+            trail.style.top = (y + trailOffsetY) + 'px';
 
-    setInterval(move, 16); // Roughly 60fps
-  </script>
+            setTimeout(() => {
+                document.body.classList.remove('ripple-effect');
+            }, 500);
+
+            requestAnimationFrame(moveDash);
+        }
+
+        updateRotation(dx, dy);
+        moveDash();
+    </script>
 </body>
 </html>
