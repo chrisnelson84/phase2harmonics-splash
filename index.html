@@ -1,119 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Phase2Harmonics</title>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: black;
-            height: 100%;
-            width: 100%;
-        }
-        #dash {
-            position: absolute;
-            width: 360px; /* doubled size */
-            height: auto;
-            z-index: 10;
-            pointer-events: none;
-            transition: transform 0.2s ease;
-        }
-        #trail {
-            position: absolute;
-            width: 180px;
-            height: auto;
-            opacity: 0.6;
-            z-index: 5;
-            pointer-events: none;
-        }
-        #footer {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            z-index: 20;
-        }
-        #magic {
-            width: 160px;
-            display: block;
-            margin: 0 auto 10px auto;
-        }
-        #dns-link {
-            color: aqua;
-            font-family: monospace;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        @keyframes ripple {
-            0% { box-shadow: 0 0 10px 2px rgba(0,255,255,0.2); }
-            50% { box-shadow: 0 0 25px 6px rgba(0,255,255,0.4); }
-            100% { box-shadow: 0 0 10px 2px rgba(0,255,255,0.2); }
-        }
-        .ripple-effect {
-            animation: ripple 0.6s ease-out;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phase2Harmonics</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: black;
+      height: 100%;
+      width: 100%;
+    }
+
+    #dash {
+      position: absolute;
+      width: 360px;
+      height: auto;
+      z-index: 10;
+      pointer-events: none;
+      transition: transform 0.25s ease-in-out;
+    }
+
+    .trail-dot {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      opacity: 0.6;
+      filter: blur(6px);
+      z-index: 2;
+      pointer-events: none;
+      animation: fadeOut 0.8s forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: scale(1.6);
+      }
+    }
+
+    .ripple-effect {
+      animation: ripple 0.6s ease-out;
+    }
+
+    @keyframes ripple {
+      0% { box-shadow: 0 0 10px 2px rgba(0,255,255,0.2); }
+      50% { box-shadow: 0 0 25px 6px rgba(0,255,255,0.4); }
+      100% { box-shadow: 0 0 10px 2px rgba(0,255,255,0.2); }
+    }
+
+    #magic {
+      position: absolute;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+    }
+
+    #dnsButton {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: cyan;
+      font-family: monospace;
+      font-size: 0.9rem;
+      text-decoration: none;
+      z-index: 5;
+    }
+  </style>
 </head>
 <body>
-    <img src="dash.png" id="dash" />
-    <img src="trail.png" id="trail" />
-    <div id="footer">
-        <img src="magic.png" id="magic" />
-        <a href="#" id="dns-link">Access Resonance Panel</a>
-    </div>
+  <img src="dash.png" id="dash" />
+  <img src="magic.png" id="magic" alt="Magic Loading" />
+  <a id="dnsButton" href="#">Access Resonance Panel</a>
 
-    <script>
-        const dash = document.getElementById('dash');
-        const trail = document.getElementById('trail');
-        let x = 200, y = 200;
-        let dx = 3 * (Math.random() > 0.5 ? 1 : -1);
-        let dy = 3 * (Math.random() > 0.5 ? 1 : -1);
-        const speed = 1.2;
+  <script>
+    const dash = document.getElementById('dash');
+    let x = 200, y = 200;
+    let dx = 2.5 * (Math.random() > 0.5 ? 1 : -1);
+    let dy = 2.5 * (Math.random() > 0.5 ? 1 : -1);
 
-        function updateRotation(dx, dy) {
-            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-            dash.style.transform = `rotate(${angle}deg)`;
-        }
+    function hueShiftColor(hue) {
+      return `hsl(${hue}, 100%, 70%)`;
+    }
 
-        function moveDash() {
-            const dashRect = dash.getBoundingClientRect();
-            const trailOffsetX = dashRect.width * 0.25;
-            const trailOffsetY = dashRect.height * 0.6;
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
+    let hue = 0;
 
-            x += dx * speed;
-            y += dy * speed;
+    function moveDash() {
+      const dashRect = dash.getBoundingClientRect();
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
 
-            // bounce with ripple
-            if (x <= 0 || x + dashRect.width >= windowWidth) {
-                dx *= -1;
-                document.body.classList.add('ripple-effect');
-            }
-            if (y <= 0 || y + dashRect.height >= windowHeight) {
-                dy *= -1;
-                document.body.classList.add('ripple-effect');
-            }
+      x += dx;
+      y += dy;
 
-            updateRotation(dx, dy);
+      let bounced = false;
 
-            dash.style.left = x + 'px';
-            dash.style.top = y + 'px';
-            trail.style.left = (x + trailOffsetX) + 'px';
-            trail.style.top = (y + trailOffsetY) + 'px';
+      if (x <= 0 || x + dashRect.width >= windowWidth) {
+        dx *= -1;
+        bounced = true;
+      }
+      if (y <= 0 || y + dashRect.height >= windowHeight) {
+        dy *= -1;
+        bounced = true;
+      }
 
-            setTimeout(() => {
-                document.body.classList.remove('ripple-effect');
-            }, 500);
+      // Rotation with +45 deg correction to align image orientation
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 45;
+      dash.style.left = `${x}px`;
+      dash.style.top = `${y}px`;
+      dash.style.transform = `rotate(${angle}deg)`;
 
-            requestAnimationFrame(moveDash);
-        }
+      // Add color-shifting trail from butt region (offset)
+      const dot = document.createElement('div');
+      dot.className = 'trail-dot';
+      dot.style.left = `${x + dashRect.width * 0.42}px`;
+      dot.style.top = `${y + dashRect.height * 0.76}px`;
+      dot.style.background = hueShiftColor(hue);
+      hue = (hue + 10) % 360;
+      document.body.appendChild(dot);
+      setTimeout(() => dot.remove(), 800);
 
-        updateRotation(dx, dy);
-        moveDash();
-    </script>
+      // Ripple on bounce
+      if (bounced) {
+        dash.classList.add('ripple-effect');
+        setTimeout(() => dash.classList.remove('ripple-effect'), 300);
+      }
+
+      requestAnimationFrame(moveDash);
+    }
+
+    moveDash();
+  </script>
 </body>
 </html>
