@@ -19,9 +19,8 @@
       position: absolute;
       width: 360px;
       height: auto;
-      z-index: 10;
+      z-index: 100;
       pointer-events: none;
-      transition: transform 0.2s ease-in-out;
     }
 
     .trail-dot {
@@ -47,10 +46,10 @@
       position: absolute;
       width: 360px;
       height: 360px;
-      background: radial-gradient(circle, rgba(0,255,255,0.4) 10%, transparent 70%);
+      background: radial-gradient(circle, rgba(0,255,255,0.3) 10%, transparent 80%);
       border-radius: 50%;
       pointer-events: none;
-      z-index: 0;
+      z-index: 99;
       animation: shellPulse 0.6s ease-out;
     }
 
@@ -65,7 +64,7 @@
       left: 50%;
       transform: translateX(-50%);
       width: 150px;
-      z-index: 20;
+      z-index: 101;
     }
 
     #dnsButton {
@@ -76,7 +75,7 @@
       color: cyan;
       font-size: 0.9rem;
       text-decoration: none;
-      z-index: 20;
+      z-index: 101;
     }
   </style>
 </head>
@@ -92,6 +91,7 @@
     let dx = 2.4 * (Math.random() > 0.5 ? 1 : -1);
     let dy = 2.4 * (Math.random() > 0.5 ? 1 : -1);
     let hue = 0;
+    let lastAngle = 0;
 
     function getAngle(dx, dy) {
       return Math.atan2(dy, dx) * 180 / Math.PI + 45;
@@ -131,14 +131,20 @@
       }
 
       const angle = getAngle(dx, dy);
+      if (angle !== lastAngle) {
+        dash.style.transform = `rotate(${angle}deg)`;
+        lastAngle = angle;
+      }
+
       dash.style.left = `${x}px`;
       dash.style.top = `${y}px`;
-      dash.style.transform = `rotate(${angle}deg)`;
 
       const trail = document.createElement('div');
       trail.className = 'trail-dot';
-      trail.style.left = `${x + dashW * 0.42}px`;
-      trail.style.top = `${y + dashH * 0.76}px`;
+      const offsetX = 0.44; // locked value for consistency
+      const offsetY = 0.76;
+      trail.style.left = `${x + dashW * offsetX}px`;
+      trail.style.top = `${y + dashH * offsetY}px`;
       trail.style.background = `hsl(${hue}, 100%, 70%)`;
       document.body.appendChild(trail);
       setTimeout(() => trail.remove(), 800);
