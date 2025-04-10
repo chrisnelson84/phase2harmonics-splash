@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Phase2Harmonics</title>
   <style>
     * {
@@ -10,92 +10,117 @@
       padding: 0;
       box-sizing: border-box;
     }
+
     html, body {
-      width: 100%;
       height: 100%;
-      overflow: hidden;
       background-color: black;
+      overflow: hidden;
       font-family: monospace;
     }
+
     #dash {
       position: absolute;
-      width: 80px;
+      width: 192px; /* 3x bigger than 64px */
       height: auto;
-      z-index: 10;
-      transition: transform 0.2s ease-in-out;
-      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.3s linear;
+      filter: drop-shadow(0 0 25px cyan);
     }
-    .trail {
+
+    #trail {
       position: absolute;
-      width: 80px;
-      height: auto;
-      opacity: 0.3;
-      z-index: 1;
+      width: 50px;
+      height: 50px;
+      background: radial-gradient(circle, rgba(0,255,255,0.4) 0%, transparent 70%);
+      border-radius: 50%;
       pointer-events: none;
+      animation: fadeOut 1s linear forwards;
     }
-    #footer {
-      position: fixed;
-      bottom: 20px;
-      width: 100%;
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: scale(1.5);
+      }
+    }
+
+    #magic-container {
+      position: absolute;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
       text-align: center;
-      z-index: 5;
     }
+
     #magic {
-      width: 120px;
+      max-width: 250px;
       height: auto;
       display: block;
-      margin: 0 auto 10px auto;
+      margin: 0 auto 10px;
     }
-    #dns-button {
+
+    #dns-link {
       color: cyan;
       text-decoration: none;
       font-size: 0.9rem;
     }
+
+    #dns-link:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <img id="dash" src="dash.png" alt="Dash the Turtle" />
-  <div id="footer">
-    <img id="magic" src="magic.png" alt="Magic Loading" />
-    <a id="dns-button" href="#">Access Resonance Panel</a>
+  <img src="dash.png" id="dash" />
+  <div id="magic-container">
+    <img src="magic.png" id="magic" alt="Magic Loading" />
+    <a id="dns-link" href="https://github.com/chrisnelson84/phase2harmonics" target="_blank">Access Resonance Panel</a>
   </div>
 
   <script>
     const dash = document.getElementById('dash');
-    let x = Math.random() * (window.innerWidth - 80);
-    let y = Math.random() * (window.innerHeight - 80);
-    let vx = (Math.random() * 2 - 1) * 2.5;
-    let vy = (Math.random() * 2 - 1) * 2.5;
-    let lastAngle = 0;
-
-    function createTrail(x, y, angle) {
-      const trail = document.createElement('img');
-      trail.src = 'dash.png';
-      trail.className = 'trail';
-      trail.style.left = `${x}px`;
-      trail.style.top = `${y}px`;
-      trail.style.transform = `rotate(${angle}deg)`;
-      document.body.appendChild(trail);
-      setTimeout(() => trail.remove(), 400);
-    }
+    let x = Math.random() * window.innerWidth;
+    let y = Math.random() * window.innerHeight;
+    let angle = Math.random() * 2 * Math.PI;
+    let speed = 2;
+    let dx = Math.cos(angle) * speed;
+    let dy = Math.sin(angle) * speed;
 
     function moveDash() {
-      x += vx;
-      y += vy;
+      x += dx;
+      y += dy;
 
-      // Bounce logic
-      if (x <= 0 || x >= window.innerWidth - 80) vx *= -1;
-      if (y <= 0 || y >= window.innerHeight - 80) vy *= -1;
+      if (x < 0 || x > window.innerWidth - dash.offsetWidth) {
+        dx = -dx;
+        x = Math.max(0, Math.min(x, window.innerWidth - dash.offsetWidth));
+      }
 
-      const angle = Math.atan2(vy, vx) * (180 / Math.PI);
+      if (y < 0 || y > window.innerHeight - dash.offsetHeight) {
+        dy = -dy;
+        y = Math.max(0, Math.min(y, window.innerHeight - dash.offsetHeight));
+      }
+
+      const radians = Math.atan2(dy, dx);
+      const degrees = radians * (180 / Math.PI);
+
       dash.style.left = `${x}px`;
       dash.style.top = `${y}px`;
-      dash.style.transform = `rotate(${angle}deg)`;
+      dash.style.transform = `rotate(${degrees}deg)`;
 
-      createTrail(x, y, angle);
+      // Comet trail
+      const trail = document.createElement("div");
+      trail.className = "trail";
+      trail.style.left = `${x + dash.offsetWidth / 2}px`;
+      trail.style.top = `${y + dash.offsetHeight / 2}px`;
+      trail.id = "trail";
+
+      document.body.appendChild(trail);
+      setTimeout(() => trail.remove(), 1000);
+
+      requestAnimationFrame(moveDash);
     }
 
-    setInterval(moveDash, 20);
+    moveDash();
   </script>
 </body>
 </html>
