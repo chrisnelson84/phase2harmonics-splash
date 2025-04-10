@@ -19,7 +19,7 @@
       position: absolute;
       width: 360px;
       height: auto;
-      z-index: 100;
+      z-index: 200;
       pointer-events: none;
       transform-origin: center center;
     }
@@ -32,7 +32,7 @@
       opacity: 0.6;
       filter: blur(6px);
       pointer-events: none;
-      z-index: 5;
+      z-index: 199;
       animation: fadeOut 0.8s forwards;
     }
 
@@ -43,30 +43,13 @@
       }
     }
 
-    .ripple-shell {
-      position: absolute;
-      width: 360px;
-      height: 360px;
-      background: radial-gradient(circle, rgba(0,255,255,0.8) 25%, transparent 80%);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 99;
-      animation: shellPulse 0.8s ease-out forwards;
-    }
-
-    @keyframes shellPulse {
-      0% { transform: scale(1); opacity: 1; }
-      40% { transform: scale(1.4); opacity: 0.7; }
-      100% { transform: scale(2); opacity: 0; }
-    }
-
     #magic {
       position: absolute;
       bottom: 70px;
       left: 50%;
       transform: translateX(-50%);
       width: 150px;
-      z-index: 101;
+      z-index: 100;
     }
 
     #dnsButton {
@@ -77,7 +60,7 @@
       color: cyan;
       font-size: 0.9rem;
       text-decoration: none;
-      z-index: 101;
+      z-index: 100;
     }
   </style>
 </head>
@@ -106,15 +89,6 @@
       return from + difference;
     }
 
-    function spawnRipple(x, y) {
-      const ripple = document.createElement('div');
-      ripple.className = 'ripple-shell';
-      ripple.style.left = `${x}px`;
-      ripple.style.top = `${y}px`;
-      document.body.appendChild(ripple);
-      setTimeout(() => ripple.remove(), 1000);
-    }
-
     function rotatePoint(cx, cy, x, y, angle) {
       const radians = angle * Math.PI / 180;
       const cos = Math.cos(radians);
@@ -136,20 +110,8 @@
       x += dx;
       y += dy;
 
-      let bounced = false;
-
-      if (x <= 0 || x + dashW >= screenW) {
-        dx *= -1;
-        bounced = true;
-      }
-      if (y <= 0 || y + dashH >= screenH) {
-        dy *= -1;
-        bounced = true;
-      }
-
-      if (bounced) {
-        spawnRipple(x + dashW / 2 - 180, y + dashH / 2 - 180);
-      }
+      if (x <= 0 || x + dashW >= screenW) dx *= -1;
+      if (y <= 0 || y + dashH >= screenH) dy *= -1;
 
       const desiredAngle = getAngle(dx, dy);
       currentAngle = shortestAngle(currentAngle, desiredAngle);
@@ -157,11 +119,11 @@
       dash.style.top = `${y}px`;
       dash.style.transform = `rotate(${currentAngle}deg)`;
 
-      // Calculate rotated tail point
+      // Tail point relative to image center, rotated with Dash
       const centerX = x + dashW / 2;
       const centerY = y + dashH / 2;
       const tailX = x + 180;
-      const tailY = y + 290;
+      const tailY = y + 300;
       const rotatedTail = rotatePoint(centerX, centerY, tailX, tailY, currentAngle);
 
       const trail = document.createElement('div');
