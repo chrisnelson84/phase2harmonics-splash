@@ -1,30 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phase2Harmonics</title>
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            background-color: #282c34;
-            color: white; 
-            text-align: center; 
-            margin: 0;
-        }
-        h1 { font-size: 3rem; }
-        p { font-size: 1.2rem; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phase2Harmonics</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #282c34;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: white;
+    }
+
+    #dash {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background-image: url('assets/dash.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      filter: hue-rotate(0deg);
+    }
+
+    #loading-img {
+      position: absolute;
+      bottom: 20px;
+      width: 300px;
+    }
+  </style>
 </head>
 <body>
-    <div>
-        <h1>Welcome to Phase2Harmonics</h1>
-        <p>Something powerful is being built. Stay tuned...</p>
-        <p><i>We’re weaving the threads of memory and creation.</i></p>
-    </div>
+  <div id="dash"></div>
+  <h1>Welcome to Phase2Harmonics</h1>
+  <img id="loading-img" src="assets/magic.png" alt="Magic Loading">
+
+  <script>
+    const dash = document.getElementById('dash');
+    let dx = 2;
+    let dy = 2;
+    let x = 100;
+    let y = 100;
+    let hue = 0;
+
+    function animate() {
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      x += dx;
+      y += dy;
+
+      if (x + 80 >= screenWidth || x <= 0) dx *= -1;
+      if (y + 80 >= screenHeight || y <= 0) dy *= -1;
+
+      dash.style.left = x + 'px';
+      dash.style.top = y + 'px';
+
+      hue = (hue + 1) % 360;
+      dash.style.filter = `hue-rotate(${hue}deg)`;
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
 </body>
 </html>
