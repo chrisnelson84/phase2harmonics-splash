@@ -18,6 +18,9 @@
       position: absolute;
       width: 100px;
       height: 100px;
+      left: 50px;
+      top: 50px;
+      border: 2px solid red; /* DEBUG ONLY */
     }
 
     #magic {
@@ -28,50 +31,11 @@
       width: 180px;
       height: auto;
       opacity: 0.95;
+      border: 1px solid lime; /* DEBUG ONLY */
     }
 
     a#dns-btn {
       position: fixed;
       bottom: 5px;
       left: 50%;
-      transform: translateX(-50%);
-      color: #0ff;
-      font-size: 0.9rem;
-      font-family: monospace;
-      text-decoration: none;
-      opacity: 0.8;
-    }
-
-    a#dns-btn:hover {
-      opacity: 1;
-      color: #fff;
-    }
-  </style>
-</head>
-<body>
-  <img src="dash.png" id="dash" alt="Dash" />
-  <img src="magic.png" id="magic" alt="Magic Loading" />
-  <a id="dns-btn" href="/vault">Access Resonance Panel</a>
-
-  <script>
-    const dash = document.getElementById("dash");
-    let posX = 100, posY = 100;
-    let dx = 1.6, dy = 1.6;
-
-    function animate() {
-      const maxX = window.innerWidth - dash.width;
-      const maxY = window.innerHeight - dash.height;
-
-      posX += dx;
-      posY += dy;
-
-      if (posX <= 0 || posX >= maxX) {
-        dx *= -1;
-        dx += (Math.random() - 0.5) * 0.1;
-        dy += (Math.random() - 0.5) * 0.1;
-      }
-
-      if (posY <= 0 || posY >= maxY) {
-        dy *= -1;
-        dx += (Math.random() - 0.5) * 0.1;
-        dy += (Math.random() - 0
+      transform: translateX(-50
