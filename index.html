@@ -1,59 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Phase2Harmonics</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      background-color: #000;
-      height: 100%;
-      width: 100%;
       overflow: hidden;
+      background-color: black;
     }
 
     #dash {
       position: absolute;
       width: 100px;
-      height: 100px;
+      height: auto;
+      transition: transform 0.1s linear;
+      pointer-events: none;
+      filter: drop-shadow(0 0 20px #00f0ff);
     }
 
     #magic {
       position: fixed;
-      bottom: 20px;
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
-      width: 180px;
+      width: 150px;
       height: auto;
-      opacity: 0.95;
+      pointer-events: none;
     }
 
-    a#dns-btn {
+    #dns-button {
       position: fixed;
-      bottom: 5px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      color: #0ff;
-      font-size: 0.9rem;
       font-family: monospace;
-      text-decoration: none;
-      opacity: 0.8;
-    }
-
-    a#dns-btn:hover {
-      opacity: 1;
-      color: #fff;
+      font-size: 0.9rem;
+      background: none;
+      color: cyan;
+      border: none;
+      text-decoration: underline;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <img src="dash.png" id="dash" alt="Dash the Turtle">
-  <img src="magic.png" id="magic" alt="Magic Loading...">
-  <a id="dns-btn" href="/vault">Access Resonance Panel</a>
+  <img id="dash" src="dash.png" alt="Dash" />
+  <img id="magic" src="magic.png" alt="Magic Loading" />
+  <button id="dns-button" onclick="location.href='https://phase2harmonics.com/dashboard'">
+    Access Resonance Panel
+  </button>
 
   <script>
     const dash = document.getElementById("dash");
+    let x = Math.random() * window.innerWidth;
+    let y = Math.random() * window.innerHeight;
+    let angle = Math.random() * 360;
+    const speed = 2;
 
-    let posX = 100, posY =
+    function update() {
+      const radians = (angle * Math.PI) / 180;
+      x += Math.cos(radians) * speed;
+      y += Math.sin(radians) * speed;
+
+      if (x <= 0 || x + dash.offsetWidth >= window.innerWidth) {
+        angle = 180 - angle + (Math.random() * 40 - 20);
+      }
+      if (y <= 0 || y + dash.offsetHeight >= window.innerHeight) {
+        angle = -angle + (Math.random() * 40 - 20);
+      }
+
+      dash.style.left = `${x}px`;
+      dash.style.top = `${y}px`;
+      dash.style.transform = `rotate(${angle}deg)`;
+
+      requestAnimationFrame(update);
+    }
+
+    update();
+  </script>
+</body>
+</html>
