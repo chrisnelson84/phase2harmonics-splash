@@ -9,26 +9,39 @@
       margin: 0;
       overflow: hidden;
       background-color: #000;
+      font-family: 'Courier New', Courier, monospace;
     }
 
     #dash {
       position: absolute;
-      width: 100px;
+      width: 150px;
       top: 50vh;
       left: 50vw;
       transform: translate(-50%, -50%);
-      transition: transform 0.1s linear;
       z-index: 10;
+      transition: transform 0.1s linear;
     }
 
     #cosmico-logo {
       position: absolute;
-      bottom: 60px;
+      top: 20%;
       left: 50%;
       transform: translateX(-50%);
-      width: 300px;
+      width: 500px;
       animation: flicker 3s infinite;
       z-index: 5;
+    }
+
+    #hologram-text {
+      position: absolute;
+      top: calc(20% + 320px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      color: #00ffff;
+      text-shadow: 0 0 8px #0ff, 0 0 20px #0ff;
+      animation: flicker 4s infinite alternate;
+      z-index: 4;
     }
 
     #resonance-panel {
@@ -52,6 +65,7 @@
 <body>
   <img id="dash" src="dash.png" alt="Dash">
   <img id="cosmico-logo" src="cosmico.png" alt="CosmiCo Logo">
+  <div id="hologram-text">I assure you we’re GONNA open!!</div>
   <div id="resonance-panel">Access Resonance Panel</div>
 
   <script>
